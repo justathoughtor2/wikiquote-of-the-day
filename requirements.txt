@@ -1,0 +1,5 @@
+Flask
+Werkzeug
+requests_html
+Pillow
+gunicorn
