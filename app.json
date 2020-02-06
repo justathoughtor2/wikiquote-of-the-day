@@ -1,0 +1,12 @@
+{
+    "name": "Wikiquote of the Day",
+    "description": "A simple app that displays the Wikiquote of the Day as a PNG.",
+    "repository": "https://github.com/justathoughtor2/wikiquote-of-the-day",
+    "environments": {
+        "review": {
+            "formation": {
+                "size": "free"
+            }
+        }
+    }
+  }
