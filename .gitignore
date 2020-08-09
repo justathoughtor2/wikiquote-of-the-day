@@ -112,3 +112,6 @@ dmypy.json
 
 # VS Code environment
 .vscode/
+
+# Secret sauce
+qpotd.png

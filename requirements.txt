@@ -4,3 +4,4 @@ requests_html
 Pillow
 gunicorn
 requests
+apscheduler

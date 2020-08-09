@@ -10,14 +10,14 @@ import requests
 from PIL import Image, ImageDraw, ImageFont
 
 import textwrap
-
 import re
-
 import sys
+import atexit
+
+from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
 
-@app.route('/wikiquote-of-the-day')
 def wikiquote():
     session = HTMLSession()
     fnt = ImageFont.truetype('Montserrat-Regular.ttf', 56)
@@ -60,10 +60,18 @@ def wikiquote():
     out = Image.alpha_composite(img_pic, img_text)
     out2 = Image.alpha_composite(out, img_caption)
 
-    output = BytesIO()
-    out2.save(output, format='PNG')
-    output.seek(0)
-    resp = send_file(output, mimetype='image/png')
+    out2.save('qpotd.png', format='PNG')
+    print('Image cached successfully.', file=sys.stdout)
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=wikiquote, trigger="interval", minutes=60)
+scheduler.start()
+
+wikiquote()
+    
+@app.route('/wikiquote-of-the-day')
+def image_render():
+    resp = send_file('qpotd.png', mimetype='image/png')
     resp.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     return resp
 
@@ -71,3 +79,6 @@ def wikiquote():
 def server_error(e):
     print('An error occurred during a request.', file=sys.stderr)
     return 'An internal error occurred.', 500
+
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: scheduler.shutdown())
