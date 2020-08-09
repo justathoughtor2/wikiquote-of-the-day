@@ -15,7 +15,7 @@ import sys
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/wikiquote-of-the-day')
 def wikiquote():
     session = HTMLSession()
     r = session.get('https://en.wikiquote.org/wiki/Wikiquote:Quote_of_the_day?action=render')
