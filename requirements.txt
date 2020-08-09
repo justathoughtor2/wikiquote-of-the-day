@@ -3,3 +3,4 @@ Werkzeug
 requests_html
 Pillow
 gunicorn
+requests
