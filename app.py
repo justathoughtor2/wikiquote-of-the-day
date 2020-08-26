@@ -31,7 +31,7 @@ def wikiquote():
 
     response = requests.get(r_pic_true)
     img_pic = Image.open(BytesIO(response.content)).convert('RGBA')
-    img_pic = img_pic.resize((1920, 1920 * img_pic.height / img_pic.width))
+    img_pic = img_pic.resize((1920, 1920 * img_pic.height // img_pic.width))
 
     r_quote = session.get('https://en.wikiquote.org/wiki/Wikiquote:Quote_of_the_day?action=render')
 
