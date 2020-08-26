@@ -31,11 +31,13 @@ def wikiquote():
 
     response = requests.get(r_pic_true)
     img_pic = Image.open(BytesIO(response.content)).convert('RGBA')
-    img_pic = img_pic.resize((1920, 1920 * img_pic.height // img_pic.width))
+    img_pic = img_pic.resize((3840, 3840 * img_pic.height // img_pic.width))
+    print(img_pic.size)
 
     r_quote = session.get('https://en.wikiquote.org/wiki/Wikiquote:Quote_of_the_day?action=render')
 
-    fnt_sz = min(img_pic.width, img_pic.height) // 60 - img_pic.width // 16 - img_pic.height // 16
+    fnt_sz = min(img_pic.width - img_pic.width // 16, img_pic.height - img_pic.height // 16) // 16
+    print(fnt_sz)
     fnt = ImageFont.truetype('Montserrat-Regular.ttf', fnt_sz)
 
     wikitext = r_quote.html.find('div > center > table', first=True).text
