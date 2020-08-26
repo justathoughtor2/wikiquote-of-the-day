@@ -20,7 +20,6 @@ app = Flask(__name__)
 
 def wikiquote():
     session = HTMLSession()
-    fnt = ImageFont.truetype('Montserrat-Regular.ttf', 112)
     
     r_pic = session.get('https://commons.wikimedia.org/wiki/Commons:Picture_of_the_day?action=render')
 
@@ -35,10 +34,12 @@ def wikiquote():
 
     r_quote = session.get('https://en.wikiquote.org/wiki/Wikiquote:Quote_of_the_day?action=render')
 
+    fnt_sz = min(img_pic.width, img_pic.height) / 60 - img_pic.width / 16 - img_pic.height / 16
+    fnt = ImageFont.truetype('Montserrat-Regular.ttf', fnt_sz)
+
     wikitext = r_quote.html.find('div > center > table', first=True).text
     wikitext = wikitext.splitlines()
     wikitext = '\n\n'.join('\n'.join(textwrap.wrap(text, width=60)) for text in wikitext)
-    height = 80 + 80 * wikitext.count('\n') if wikitext.count('\n') > 1 else 240
     print(wikitext, file=sys.stdout)
     img_text = Image.new('RGBA', (img_pic.size), color=(0, 0, 0, 64))
     d = ImageDraw.Draw(img_text, mode='RGBA')
@@ -49,7 +50,6 @@ def wikiquote():
     wikipic_caption = r_pic.html.find('table > tbody > tr > td > div.description', first=True).text
     wikipic_caption = wikipic_caption.splitlines()
     wikipic_caption = '\n\n'.join('\n'.join(textwrap.wrap(text, width=60)) for text in wikipic_caption)
-    height = 80 + 80 * wikipic_caption.count('\n') if wikipic_caption.count('\n') > 1 else 240
     print(wikipic_caption, file=sys.stdout)
     margin = img_pic.size[0] / 16
     offset = (img_pic.size[1] / 16) * 12
