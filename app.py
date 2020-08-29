@@ -36,7 +36,7 @@ def wikiquote():
 
     r_quote = session.get('https://en.wikiquote.org/wiki/Wikiquote:Quote_of_the_day?action=render')
 
-    fnt_sz = min(img_pic.width - img_pic.width // 16, img_pic.height - img_pic.height // 16) // 16
+    fnt_sz = min(img_pic.width - img_pic.width // 32, img_pic.height - img_pic.height // 32) // 32
     print(fnt_sz)
     fnt = ImageFont.truetype('Montserrat-Regular.ttf', fnt_sz)
 
@@ -48,7 +48,7 @@ def wikiquote():
     d = ImageDraw.Draw(img_text, mode='RGBA')
     margin = img_pic.size[0] // 16
     offset = img_pic.size[1] // 16
-    d.text((margin, offset), wikitext, font=fnt, fill='white')
+    d.text((margin, offset), wikitext, font=fnt, fill=(255, 255, 255, 255))
     
     wikipic_caption = r_pic.html.find('table > tbody > tr > td > div.description', first=True).text
     wikipic_caption = wikipic_caption.splitlines()
@@ -56,9 +56,10 @@ def wikiquote():
     print(wikipic_caption, file=sys.stdout)
     margin = img_pic.size[0] // 16
     offset = (img_pic.size[1] // 16) * 12
-    d.text((margin, offset), wikipic_caption, font=fnt, fill='white')
+    d.text((margin, offset), wikipic_caption, font=fnt, fill=(255, 255, 255, 255))
     
     out = Image.blend(img_pic, img_text, 0.5)
+    out.putalpha(255)
 
     out.save('qpotd.png', format='PNG')
     print('Image cached successfully.', file=sys.stdout)
